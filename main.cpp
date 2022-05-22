@@ -4,6 +4,9 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <thread>
+#include <fstream>
+#include <ostream>
 
 using namespace sf;
 using namespace std;
@@ -41,7 +44,24 @@ private:
     Text txt;
 };
 
+void readList(std::map<int, String>& m) {
+    wfstream f;
+    f.open("resource/list.txt");
+
+    int i = 0;
+    if(f.is_open()) {
+        while(!f.eof()) {
+            wchar_t s[16];
+            f.getline(s, 16);
+
+            m.insert({++i, String(s)});
+        }
+    }
+}
+
 int main() {
+    setlocale(LC_ALL, "Korean");
+
     HWND hWnd = GetConsoleWindow();
 
     char ans;
@@ -56,8 +76,13 @@ int main() {
         isSel = true;
         cout << "Input your number\n>> ";
         cin >> ori;
+
+        cout << "    [    List    ]\n";
         for(int i = 1; i <= 18; ++i) {
-            printf("%2d ", i);
+            printf("%3d", i);
+            if(!(i % 2)) {
+                cout << "  ";
+            }
             if(i % 6==0) {
                 printf("\n");
             }
@@ -69,26 +94,8 @@ int main() {
         ShowWindow(hWnd, HIDE_WINDOW);
     }
 
-    std::map<int, String> name {
-            {1,  L"계찬정"},
-            {2,  L"김강현"},
-            {3,  L"김준서"},
-            {4,  L"박준서"},
-            {5,  L"서주미"},
-            {6,  L"송정윤"},
-            {7,  L"송현서"},
-            {8,  L"송현우"},
-            {9,  L"신아인"},
-            {10, L"안강호"},
-            {11, L"오진서"},
-            {12, L"이학진"},
-            {13, L"임준성"},
-            {14, L"정윤서"},
-            {15, L"최민욱"},
-            {16, L"한태현"},
-            {17, L"허여준"},
-            {18, L" 허 정"}
-    };
+    std::map<int, String> name;
+    readList(name);
 
     std::array<unsigned, 18> number;
     iota(number.begin(), number.end(), 1);
@@ -122,9 +129,9 @@ int main() {
     cf.loadFromFile("resource/fonts/noto.otf");
     Text ct;
     ct.setFont(cf);
-    ct.setCharacterSize(32);
+    ct.setCharacterSize(36);
     ct.setFillColor(Color::Black);
-    ct.setPosition({390, 20});
+    ct.setPosition({385, 20});
     ct.setString("1 - 2");
 
     Desk gyotak(L"교 탁", {243, 70});
@@ -140,7 +147,11 @@ int main() {
             else if(Keyboard::isKeyPressed(Keyboard::Enter)) {
                 tex.update(app);
                 sf::Image img = tex.copyToImage();
-                img.saveToFile("Table.png");
+
+                std::thread t([img]() {
+                    img.saveToFile("Jari.png");
+                });
+                t.detach();
             }
         }
         app.clear(Color::White);

@@ -33,7 +33,7 @@
 # are available for both release and debug modes.
 #
 # If SFML is not installed in a standard path, you can use the SFML_DIR CMake variable
-# to tell CMake where SFML's config file is located (PREFIX/lib/cmake/SFML for a library-based installation,
+# to tell CMake where SFML's config file is located (PREFIX/lib/cmake-build-debug/SFML for a library-based installation,
 # and PREFIX/SFML.framework/Resources/CMake on macOS for a framework-based installation).
 #
 # Output

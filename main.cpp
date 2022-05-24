@@ -118,15 +118,24 @@ int main() {
 
         ShowWindow(hWnd, HIDE_WINDOW);
     }
-
-    RenderWindow app(VideoMode(840, 540), L"자리뽑기");
+    sf::ContextSettings setting;
+    setting.antialiasingLevel = 8;
+    RenderWindow app(VideoMode(840, 540), L"자리뽑기", Style::Default, setting);
     app.setFramerateLimit(60);
 
     sf::Texture tex;
     tex.create(app.getSize().x, app.getSize().y);
 
+    Texture logo;
+    logo.loadFromFile("resource/gsm.png");
+
+    Sprite s_logo(logo);
+    s_logo.setScale({0.1f, 0.1f});
+    s_logo.setPosition({30,10});
+
     Font cf;
     cf.loadFromFile("resource/fonts/noto.otf");
+
     Text ct;
     ct.setFont(cf);
     ct.setCharacterSize(36);
@@ -176,6 +185,7 @@ int main() {
             gyotak.draw(app);
             d.draw(app);
         }
+        app.draw(s_logo);
         app.draw(ct);
         app.display();
     }
